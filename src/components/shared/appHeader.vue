@@ -22,7 +22,7 @@
         <a class="navbar-item" href="#">Favorites</a>
       </div>
 
-      <div class="ml-auto flex items-center">
+      <div v-if="_isAuthenticated" class="ml-auto flex items-center">
         <router-link
           :to="{ name: 'newBookmarkPage' }"
           class="flex bg-gray-700 hover:bg-black text-white px-3 py-1 rounded-sm text-sm items-center mr-2"
@@ -89,7 +89,7 @@
               </svg>
               Favorites</a
             >
-            <a href="#" class="menu-item">
+            <a @click="onLogout" href="#" class="menu-item">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 enable-background="new 0 0 24 24"
@@ -113,3 +113,19 @@
     </nav>
   </div>
 </template>
+
+<script>
+import { mapGetters } from "vuex"
+
+export default {
+  computed: {
+    ...mapGetters(["_isAuthenticated"]),
+  },
+  methods: {
+    onLogout() {
+      this.$store.commit("logoutUser")
+      this.$router.push({ name: "LoginPage" })
+    },
+  },
+}
+</script>

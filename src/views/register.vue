@@ -46,18 +46,17 @@ export default {
   },
   methods: {
     onSave() {
-      const key = "booklike123!456?"
-      const cryptedPassword = CryptoJS.AES.encrypt(
+      const password = CryptoJS.HmacSHA1(
         this.userData.password,
-        key
+        this.$store.getters._saltKey
       ).toString() // password şifreleme
-      console.log(cryptedPassword)
+      console.log(password)
       console.log(this.userData)
 
       this.$appAxios
         .post("/users", {
           ...this.userData,
-          password: cryptedPassword,
+          password: password,
         })
         .then((registered_user_response) => {
           console.log("registered_user_response", registered_user_response)
