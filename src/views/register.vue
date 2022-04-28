@@ -54,10 +54,15 @@ export default {
       console.log(cryptedPassword)
       console.log(this.userData)
 
-      this.$appAxios.post("/users", {
-        ...this.userData,
-        password: cryptedPassword,
-      })
+      this.$appAxios
+        .post("/users", {
+          ...this.userData,
+          password: cryptedPassword,
+        })
+        .then((registered_user_response) => {
+          console.log("registered_user_response", registered_user_response)
+          this.$router.push({ name: "HomePage" })
+        })
 
       // const decryptedPassword = CryptoJS.AES.decrypt(
       //   cryptedPassword,
