@@ -50,8 +50,6 @@ export default {
         this.userData.password,
         this.$store.getters._saltKey
       ).toString() // password şifreleme
-      console.log(password)
-      console.log(this.userData)
 
       this.$appAxios
         .post("/users", {
