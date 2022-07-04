@@ -14,7 +14,7 @@
       placeholder="URL"
       class="input mb-3"
     />
-    <select v-model="userData.category_id" class="input mb-3">
+    <select v-model="userData.categoryId" class="input mb-3">
       <option value="Selected" selected disabled>Kategori</option>
       <option
         v-for="category in categoryList"

@@ -8,7 +8,7 @@
         >{{ item.title || "-" }}</a
       >
       <div class="flex items-center justify-center mt-2 gap-x-1">
-        <button class="like-btn group">
+        <button @click="likeItem" class="like-btn group" :class="alreadyLiked">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="fill-current group-hover:text-white"
@@ -22,7 +22,7 @@
             />
           </svg>
         </button>
-        <button class="bookmark-btn group bookmark-item-active">
+        <button class="bookmark-btn group">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="fill-current group-hover:text-white"
@@ -69,12 +69,28 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex"
 export default {
   props: {
     item: {
       type: Object,
       required: true,
       default: () => {},
+    },
+  },
+  methods: {
+    likeItem() {
+      console.log("_userLikes", this._userLikes)
+      let likes = [...this._userLikes]
+      if (!this.alreadyLiked) {
+        likes = [...likes, this.item.id]
+      }
+      this.$appAxios
+        .patch(`/users/${this._getCurrentUser.id}`, { likes })
+        .then((like_response) => {
+          console.log(like_response)
+          this.$store.commit("addToLikes", this.item.id)
+        })
     },
   },
   computed: {
@@ -84,6 +100,12 @@ export default {
     userName() {
       return this.item?.user?.fullname || "-"
     },
+    alreadyLiked() {
+      return {
+        "like-item-active": this._userLikes?.indexOf(this.item.id) - 1,
+      }
+    },
+    ...mapGetters(["_getCurrentUser", "_userLikes", "_userBookmarks"]),
   },
 }
 </script>
