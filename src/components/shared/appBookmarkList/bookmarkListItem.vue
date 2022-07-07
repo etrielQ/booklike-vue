@@ -8,7 +8,13 @@
         >{{ item.title || "-" }}</a
       >
       <div class="flex items-center justify-center mt-2 gap-x-1">
-        <button @click="likeItem" class="like-btn group" :class="alreadyLiked">
+        <button
+          @click="likeItem"
+          class="like-btn group"
+          :class="{
+            'like-item-active': alreadyLiked,
+          }"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="fill-current group-hover:text-white"
@@ -22,7 +28,13 @@
             />
           </svg>
         </button>
-        <button class="bookmark-btn group">
+        <button
+          class="bookmark-btn group"
+          @click="bookmarkItem"
+          :class="{
+            'bookmark-item-active': alreadyBookmarked,
+          }"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="fill-current group-hover:text-white"
@@ -80,16 +92,31 @@ export default {
   },
   methods: {
     likeItem() {
-      console.log("_userLikes", this._userLikes)
       let likes = [...this._userLikes]
+
       if (!this.alreadyLiked) {
         likes = [...likes, this.item.id]
+      } else {
+        likes = likes.filter((l) => l !== this.item.id)
       }
       this.$appAxios
         .patch(`/users/${this._getCurrentUser.id}`, { likes })
-        .then((like_response) => {
-          console.log(like_response)
-          this.$store.commit("addToLikes", this.item.id)
+        .then(() => {
+          this.$store.commit("setLikes", likes)
+        })
+    },
+    bookmarkItem() {
+      let bookmarks = [...this._userBookmarks]
+
+      if (!this.alreadyBookmarked) {
+        bookmarks = [...bookmarks, this.item.id]
+      } else {
+        bookmarks = bookmarks.filter((b) => b !== this.item.id)
+      }
+      this.$appAxios
+        .patch(`/users/${this._getCurrentUser.id}`, { bookmarks })
+        .then(() => {
+          this.$store.commit("setBookmarks", bookmarks)
         })
     },
   },
@@ -101,9 +128,10 @@ export default {
       return this.item?.user?.fullname || "-"
     },
     alreadyLiked() {
-      return {
-        "like-item-active": this._userLikes?.indexOf(this.item.id) - 1,
-      }
+      return this._userLikes?.indexOf(this.item.id) > -1
+    },
+    alreadyBookmarked() {
+      return this._userBookmarks?.indexOf(this.item.id) > -1
     },
     ...mapGetters(["_getCurrentUser", "_userLikes", "_userBookmarks"]),
   },

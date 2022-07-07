@@ -71,7 +71,6 @@ export default {
         userId: this._getCurrentUser?.id,
         created_at: new Date(),
       }
-      console.log(saveData)
       this.$appAxios.post("/bookmarks", saveData).then(() => {
         this.$router.push({ name: "HomePage" })
         this.userData = {

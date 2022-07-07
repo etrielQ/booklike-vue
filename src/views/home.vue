@@ -21,7 +21,6 @@ export default {
     this.$appAxios
       .get("/bookmarks?_expand=category&_expand=user")
       .then((bookmark_list_response) => {
-        console.log(bookmark_list_response)
         this.bookmarkList = bookmark_list_response?.data
       })
   },
@@ -31,7 +30,6 @@ export default {
         ? `/bookmarks?_expand=category&_expand=user&categoryId=${categoryId}`
         : `/bookmarks?_expand=category&_expand=user`
       this.$appAxios.get(url).then((bookmark_list_response) => {
-        console.log(bookmark_list_response)
         this.bookmarkList = bookmark_list_response?.data
       })
     },
