@@ -2,7 +2,8 @@
   <app-header />
   <div class="flex flex-row">
     <sidebar @category-changed="updateBookmarkList" />
-    <app-bookmark-list :items="bookmarkList" />
+    <app-bookmark-list :items="bookmarkList" v-if="bookmarkList.length > 0" />
+    <div v-else>bu kategoride içerik yok</div>
   </div>
 </template>
 
